@@ -73,20 +73,27 @@ const Home = () => {
         </div>
       </form>
       <div className="flex flex-col justify-center items-center mt-10 my-20 gap-y-4">
-        <h1 className="text-8xl font-semibold text-slate-950 text-center mx-auto">
+        <h1 className=" text-4xl lg:text-8xl font-semibold text-slate-950 text-center mx-auto">
           Find your Oompa Loompa
         </h1>
 
-        <p className="text-3xl text-gray-600 text-balance mx-auto">
+        <p className="text-xl lg:text-3xl text-gray-600 text-center lg:text-balance mx-auto">
           Find your Oompa Loompa
         </p>
       </div>
-      <ListLoompas
-        data={data}
-        isLoading={isLoading}
-        onReachEnd={onReachEnd}
-        onClickItem={onClickItem}
-      />
+
+      {isLoading || !data ? (
+        <div className="flex items-center justify-center min-h-80">
+          <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-blue-600" />
+        </div>
+      ) : (
+        <ListLoompas
+          data={data}
+          isLoading={isLoading}
+          onReachEnd={onReachEnd}
+          onClickItem={onClickItem}
+        />
+      )}
     </>
   );
 };
