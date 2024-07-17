@@ -1,11 +1,13 @@
-import React from "react";
 import Header from "../Header";
+import { Outlet } from "react-router-dom";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = () => {
   return (
     <>
       <Header />
-      <main className="container mx-auto">{children}</main>
+      <main className="container mx-auto p-6 mt-6 overflow-auto">
+        {<Outlet />}
+      </main>
     </>
   );
 };

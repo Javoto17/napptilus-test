@@ -1,8 +1,17 @@
 import { Loompa } from "../../types/Loompa";
 
-const CardLoompa = (loompa: Loompa) => {
+interface CardLoompaProps {
+  loompa: Loompa;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+const CardLoompa = ({ loompa, onClick }: CardLoompaProps) => {
   return (
-    <div>
+    <div
+      role="button"
+      onClick={onClick}
+      className="hover:transition-all hover:scale-105 duration-150 ease-in-out"
+    >
       <div className="aspect-video relative rounded-lg">
         <img
           src={loompa?.image}
@@ -16,9 +25,9 @@ const CardLoompa = (loompa: Loompa) => {
           {loompa?.first_name} {loompa?.last_name}
         </p>
 
-        <p className="text-base font-normal text-gray-400">{loompa?.gender}</p>
+        <p className="text-base font-normal text-gray-600">{loompa?.gender}</p>
 
-        <p className="text-base font-normal text-gray-400 italic">
+        <p className="text-base font-normal text-gray-600 italic">
           {loompa?.profession}
         </p>
       </div>

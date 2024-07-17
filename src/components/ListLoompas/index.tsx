@@ -10,9 +10,15 @@ interface ListLoompasProps {
   data?: Loompa[];
   isLoading: boolean;
   onReachEnd?: () => void;
+  onClickItem?: (loompa: Loompa) => void;
 }
 
-const ListLoompas = ({ data, isLoading, onReachEnd }: ListLoompasProps) => {
+const ListLoompas = ({
+  data,
+  isLoading,
+  onReachEnd,
+  onClickItem,
+}: ListLoompasProps) => {
   const { isIntersecting, ref } = useIntersectionObserver({
     threshold: 0.8,
     root: null,
@@ -27,7 +33,12 @@ const ListLoompas = ({ data, isLoading, onReachEnd }: ListLoompasProps) => {
 
       fn();
     }
-  }, [isIntersecting, onReachEnd, isLoading, ref]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isIntersecting, isLoading, ref]);
+
+  const handleClick = (item: Loompa) => {
+    if (typeof onClickItem === "function") onClickItem(item);
+  };
 
   return (
     <ul className="list-none grid grid-cols-12 gap-y-6 gap-x-4">
@@ -42,7 +53,7 @@ const ListLoompas = ({ data, isLoading, onReachEnd }: ListLoompasProps) => {
               key={`list-item-${loompa?.id}`}
               className="col-span-full md:col-span-6 lg:col-span-4"
             >
-              <CardLoompa {...loompa} />
+              <CardLoompa loompa={loompa} onClick={() => handleClick(loompa)} />
             </li>
           );
         })}
