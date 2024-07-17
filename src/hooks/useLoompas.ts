@@ -33,8 +33,7 @@ export function useLoompas(page?: number, term?: string) {
     dispatch(
       getLoompasByPage({
         page,
-        list: term ? "filteredLoompas" : "loompas",
-        itemsPerPage: 10,
+        itemsPerPage: 12,
       })
     );
 

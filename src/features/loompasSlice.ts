@@ -1,11 +1,11 @@
 import { REMEMBER_PERSISTED, REMEMBER_REHYDRATED } from "redux-remember";
-
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import api from "../services/loompas";
 import CacheService, { STORAGE_KEY } from "../services/storage";
 import { Loompa, LoompaDetail } from "../types/Loompa";
-import { toLowerCase } from "../utiils/string";
+import { toLowerCase } from "../utils/string";
+import { getTime, getTimeByKind, TimeKind } from "../utils/time";
 
 type LoompaList = {
   results: Loompa[];
@@ -28,13 +28,14 @@ interface FilterLoompasArgs {
 interface GetLoompasByPageArgs {
   page?: number;
   itemsPerPage?: number;
-  list: "loompas" | "filteredLoompas";
 }
+
+const ITEMS_PER_PAGE = 12;
 
 const paginationItems = <T>(
   data: T[],
   page: number = 1,
-  itemsPerPage: number = 10,
+  itemsPerPage: number = ITEMS_PER_PAGE,
   start: number = 0
 ) => {
   if (page < 1) {
@@ -90,32 +91,19 @@ const slice = createSlice({
     getLoompasByPage: (
       state,
       {
-        payload: { page = 1, itemsPerPage = 10, list = "loompas" },
+        payload: { page = 1, itemsPerPage = ITEMS_PER_PAGE },
       }: PayloadAction<GetLoompasByPageArgs>
     ) => {
-      const backupByList: Record<
-        GetLoompasByPageArgs["list"],
-        keyof LoompasState
-      > = {
-        loompas: "allLoompas",
-        filteredLoompas: "backupFilteredLoompas",
-      };
-
-      const backupList = backupByList[list];
-
-      const backupDataFiltered = paginationItems(
-        state[backupList] as Loompa[],
+      const nextPaginationData = paginationItems(
+        state.allLoompas,
         page,
         itemsPerPage,
-        state[list].results?.length
+        state.loompas?.results?.length
       );
 
-      return {
-        ...state,
-        [list]: {
-          ...state?.[list],
-          results: [...state[list].results, ...backupDataFiltered],
-        },
+      state.loompas = {
+        ...state.loompas,
+        results: [...state.loompas.results, ...nextPaginationData],
       };
     },
   },
@@ -147,7 +135,7 @@ const slice = createSlice({
         (state, { payload }) => {
           CacheService.setItem(
             STORAGE_KEY.LOOMPAS_EXPIRATION,
-            new Date().getTime() + 86400000
+            getTime() + getTimeByKind(TimeKind.DAY)
           );
 
           state.loompas = {
@@ -170,7 +158,7 @@ const slice = createSlice({
 
           CacheService.setItem(
             `${STORAGE_KEY.LOOMPA_DETAIL_EXPIRATION}${payload?.id}`,
-            new Date().getTime() + 86400000
+            getTime() + getTimeByKind(TimeKind.DAY)
           );
         }
       )
