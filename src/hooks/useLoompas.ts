@@ -34,7 +34,7 @@ export function useLoompas(page?: number, term?: string) {
       getLoompasByPage({
         page,
         list: term ? "filteredLoompas" : "loompas",
-        itemsPerPage: 5,
+        itemsPerPage: 10,
       })
     );
 
