@@ -103,8 +103,6 @@ const slice = createSlice({
 
       const backupList = backupByList[list];
 
-      console.log("boom", state[list].results?.length);
-
       const backupDataFiltered = paginationItems(
         state[backupList] as Loompa[],
         page,

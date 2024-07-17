@@ -17,8 +17,6 @@ const Home = () => {
       return;
     }
 
-    console.log(totalItems, data, totalItems);
-
     setPage((prevPage) =>
       totalItems === data.length ? prevPage : prevPage + 1
     );
